@@ -1,0 +1,15 @@
+.box {
+  border: 2px solid #1c1c1c;
+  height: 300px;
+  display: flex; 
+  flex-direction: column;
+  justify-content: center; 
+  align-items: center;
+  cursor: pointer;
+  font-size: 26px;
+  transition: transform 0.4s;
+  user-select: none;
+}
+.box:hover {
+  transform: scale(0.9);
+}
