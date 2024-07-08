@@ -1,33 +1,45 @@
-import {gsap} from "gsap"
-import {useState, useEffect} from "react"
+import {useState, useEffect, useCallback} from "react"
 
 function App(props) {
-  const {initialData} = window.$wujie?.props;
+  const { loginState, permission } = window.$wujie?.props || "";
 
-  const [basicAppAsyncData, setBasicAppAsyncData] = new useState({
-    message: ""
-  })
+  const [data, setData] = useState();
+
+  const getData = useCallback(() => {   // 发送请求获取数据（需要携带loginState, permission验证是否有权限）
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        if(loginState && permission) {
+          resolve({
+            data: "micro app one data",
+            msg: "ok"
+          })
+        } else {
+          resolve({
+            data: "",
+            msg: "not allowed"
+          })
+        }
+      }, 500)
+    })
+  }, [loginState, permission])
 
   useEffect(() => {
-    const messageUpdateHandle = (message) => {
-      setBasicAppAsyncData({
-        message,
-      })
-    }
-    window.$wujie?.bus.$on("micro-app-one-message-update", messageUpdateHandle)
-    return () => {
-      window.$wujie?.bus.$off("micro-app-one-message-update", messageUpdateHandle);
-    }
-  }, [basicAppAsyncData])
+    getData().then(res => {
+      setData(res.data);
+    });
+  }, [])
 
   return (
-    <div className="box"
-         onClick={() => {
-           window.$wujie?.bus.$emit("count-plus", 1);
-         }}>
+    <div className="box">
       <h2>Micro App One</h2>
-      <p>{initialData}</p>
-      <p>{basicAppAsyncData.message}</p>
+      <p>{data}</p>
+      <button 
+        className="btn"
+        onClick={() => {
+          window.$wujie?.bus.$emit("logout");
+        }}>
+        退出登录
+      </button>
     </div>
   )
 }

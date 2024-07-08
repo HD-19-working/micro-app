@@ -1,23 +1,25 @@
 import React from 'react'
-import ReactDOM from 'react-dom/client'
+import { createRoot } from 'react-dom/client';
 import App from './App'
 import "./index.css"
 
 if (window.__POWERED_BY_WUJIE__) {
+  let root;
   window.__WUJIE_MOUNT = () => {
-    ReactDOM.createRoot(document.getElementById('root')).render(
+    root = createRoot(document.getElementById('root'));
+    root.render(
       <React.StrictMode>
         <App />
-      </React.StrictMode>,
+      </React.StrictMode>
     )
   };
   window.__WUJIE_UNMOUNT = () => {
-    ReactDOM.unmountComponentAtNode(document.getElementById("root"));
+    root && root.unmount();
   };
 } else {
-  ReactDOM.createRoot(document.getElementById('root')).render(
+  createRoot(document.getElementById('root')).render(
     <React.StrictMode>
       <App />
-    </React.StrictMode>,
+    </React.StrictMode>
   )
 }
